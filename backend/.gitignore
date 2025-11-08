@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### log files ###
+log/
+logs/
+
+# 本地开发yaml配置
+*-dev.yml
+*-dev.yaml
