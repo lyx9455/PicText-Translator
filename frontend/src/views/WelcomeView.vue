@@ -8,6 +8,11 @@
       <el-image style="width: 100%; height: 100%;" fit="cover"
                 src="http://i1.hdslb.com/bfs/archive/60f35dd1d23bea22e317500bbcf9406ebf8f31c3.jpg" referrer-policy="no-referrer">
       </el-image>
+<!--      <img-->
+<!--          src="http://i1.hdslb.com/bfs/archive/60f35dd1d23bea22e317500bbcf9406ebf8f31c3.jpg"-->
+<!--          style="width: 100%; height: 100%; object-fit: cover;"-->
+<!--          referrerpolicy="no-referrer"-->
+<!--      />-->
     </div>
     <div class="welcome-title">
       <div style="font-size: 30px;font-weight: bold">欢迎来到我们的学习平台</div>
