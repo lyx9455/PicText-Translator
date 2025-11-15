@@ -3,9 +3,9 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.Account;
-import com.example.entity.vo.request.ConfirmResetVO;
-import com.example.entity.vo.request.EmailRegisterVO;
-import com.example.entity.vo.request.EmailResetVO;
+import com.example.entity.vo.ConfirmResetVO;
+import com.example.entity.vo.EmailRegisterVO;
+import com.example.entity.vo.EmailResetVO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.utils.Const;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 

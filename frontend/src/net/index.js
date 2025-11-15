@@ -116,4 +116,31 @@ function unauthorized() {
     return !takeAccessToken()
 }
 
-export {post, get, login, logout, unauthorized}
+// ======== JWT 解析工具 ========
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        console.error("Invalid JWT Token:", e);
+        return null;
+    }
+}
+
+// ======== 从JWT中读取用户名 ========
+function getUsername() {
+    const token = takeAccessToken();
+    if (!token) return null;
+    const payload = parseJwt(token);
+    return payload?.name || null; // 后端定义的字段是 "name"
+}
+
+
+export { post, get, login, logout, unauthorized, getUsername };

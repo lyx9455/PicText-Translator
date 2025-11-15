@@ -1,9 +1,9 @@
 package com.example.controller;
 
 import com.example.entity.RestBean;
-import com.example.entity.vo.request.ConfirmResetVO;
-import com.example.entity.vo.request.EmailRegisterVO;
-import com.example.entity.vo.request.EmailResetVO;
+import com.example.entity.vo.ConfirmResetVO;
+import com.example.entity.vo.EmailRegisterVO;
+import com.example.entity.vo.EmailResetVO;
 import com.example.service.AccountService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.example.entity.vo.request;
+package com.example.entity.vo;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

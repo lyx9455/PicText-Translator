@@ -2,7 +2,7 @@ package com.example.config;
 
 import com.example.entity.RestBean;
 import com.example.entity.dto.Account;
-import com.example.entity.vo.response.AuthorizeVO;
+import com.example.entity.vo.AuthorizeVO;
 import com.example.filter.JwtAuthenticationFilter;
 import com.example.filter.RequestLogFilter;
 import com.example.service.AccountService;
