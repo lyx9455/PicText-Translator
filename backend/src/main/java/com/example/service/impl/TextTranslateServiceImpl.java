@@ -5,7 +5,7 @@ import com.aliyun.alimt20181012.models.TranslateGeneralResponse;
 import com.example.entity.dto.TextTranslateDTO;
 import com.example.entity.vo.TextTranslateVO;
 import com.example.service.TextTranslateService;
-import com.example.thirdparty.TextTranslateAliClient;
+import com.example.thirdparty.TranslateAliClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TextTranslateServiceImpl implements TextTranslateService {
 
-    private final TextTranslateAliClient client;
+    private final TranslateAliClient client;
 
     @Override
     public TextTranslateVO translate(TextTranslateDTO dto) {
@@ -29,7 +29,7 @@ public class TextTranslateServiceImpl implements TextTranslateService {
                     .setScene(dto.getScene())
                     .setContext(dto.getContext());
 
-            TranslateGeneralResponse response = client.translate(request);
+            TranslateGeneralResponse response = client.translateText(request);
 
             String translated = response.getBody().getData().getTranslated();
             Integer wordCount = Integer.valueOf(response.getBody().getData().getWordCount());

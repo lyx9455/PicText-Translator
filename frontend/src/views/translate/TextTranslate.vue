@@ -93,7 +93,7 @@ watch(sourceText, () => {
 
   timer = setTimeout(() => {
     translateText()
-  }, 400)
+  }, 1000)
 })
 
 // 调用后端翻译

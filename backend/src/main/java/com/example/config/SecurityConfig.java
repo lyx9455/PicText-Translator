@@ -91,7 +91,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(conf -> conf
                         .requestMatchers("/api/auth/**", "/error").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/translate/text").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/translate/**").permitAll()
                         .anyRequest().hasAnyRole(Const.ROLE_DEFAULT)
                 )
 

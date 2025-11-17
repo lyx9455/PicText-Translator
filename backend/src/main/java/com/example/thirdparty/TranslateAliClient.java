@@ -1,8 +1,7 @@
 package com.example.thirdparty;
 
 import com.aliyun.alimt20181012.Client;
-import com.aliyun.alimt20181012.models.TranslateGeneralRequest;
-import com.aliyun.alimt20181012.models.TranslateGeneralResponse;
+import com.aliyun.alimt20181012.models.*;
 import com.aliyun.teaopenapi.models.Config;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TextTranslateAliClient {
+public class TranslateAliClient {
 
     @Value("${aliyun.translate.accessKey}")
     private String accessKey;
@@ -34,7 +33,18 @@ public class TextTranslateAliClient {
         this.client = new Client(config);
     }
 
-    public TranslateGeneralResponse translate(TranslateGeneralRequest request) throws Exception {
+    /** ------------------------- 通用文本翻译 ------------------------- **/
+    public TranslateGeneralResponse translateText(TranslateGeneralRequest request) throws Exception {
         return client.translateGeneral(request);
     }
+
+    /** ------------------------- 图片翻译（你即将写） ------------------------- **/
+    public TranslateImageResponse translateImage(TranslateImageRequest request) throws Exception {
+        return client.translateImage(request);
+    }
+
+//    /** ------------------------- 文档翻译（可选） ------------------------- **/
+//    public TranslateDocumentResponse translateDocument(TranslateDocumentRequest request) throws Exception {
+//        return client.translateDocument(request);
+//    }
 }
