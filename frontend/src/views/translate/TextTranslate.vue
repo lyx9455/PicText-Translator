@@ -19,7 +19,7 @@
               type="textarea"
               v-model="sourceText"
               placeholder="请输入需要翻译的文本"
-              rows="10"
+              :rows="10"
           ></el-input>
         </div>
 
@@ -43,7 +43,7 @@
           <el-input
               type="textarea"
               :value="translatedText"
-              rows="10"
+              :rows="10"
               readonly
           ></el-input>
 

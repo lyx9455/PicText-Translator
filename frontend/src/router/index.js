@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { unauthorized } from "@/net/index.js";
+import { takeAccessToken } from "@/net"
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,14 +49,15 @@ const router = createRouter({
 
 // 登录状态守卫
 router.beforeEach((to, from, next) => {
-    const isUnauthorized = unauthorized()
-    if (to.name?.startsWith('welcome') && !isUnauthorized) {
-        next('/index')
-    } else if (to.fullPath.startsWith('/index') && isUnauthorized) {
-        next('/')
+    const hasToken = !!takeAccessToken();   // 登录状态
+
+    if (to.name?.startsWith('welcome') && hasToken) {
+        next('/index');
+    } else if (to.fullPath.startsWith('/index') && !hasToken) {
+        next('/');
     } else {
-        next()
+        next();
     }
-})
+});
 
 export default router
