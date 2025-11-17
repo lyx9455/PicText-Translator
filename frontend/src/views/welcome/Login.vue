@@ -50,9 +50,9 @@
 
 <script setup>
 import {User, Lock} from '@element-plus/icons-vue'
-import router from "@/router/index.js";
+import router from "@/router";
 import {reactive, ref} from "vue";
-import {login} from '@/net/index.js'
+import {auth} from '@/net'
 
 const formRef = ref()
 const form = reactive({
@@ -70,12 +70,20 @@ const rules = {
   ]
 }
 
-function userLogin() {
-  formRef.value.validate((Valid) => {
-    if (Valid) {
-      login(form.username, form.password, form.remember, () => router.push("/index"))
-    }
-  })
+async function userLogin() {
+  const valid = await formRef.value.validate();
+  if (!valid) return;
+
+  try {
+    await auth.login({
+      username: form.username,
+      password: form.password,
+      remember: form.remember
+    });
+    router.push("/index");
+  } catch (e) {
+    console.error(e); // 错误已由拦截器处理
+  }
 }
 </script>
 

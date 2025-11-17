@@ -86,99 +86,92 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
-import {EditPen, Lock, Message} from "@element-plus/icons-vue";
-import {get, post} from "@/net/index.js";
-import {ElMessage} from "element-plus";
-import router from "@/router/index.js";
+import { reactive, ref } from "vue";
+import { EditPen, Lock, Message } from "@element-plus/icons-vue";
+import router from "@/router";
+import { auth } from "@/net";
 
-const active = ref(0)
+const active = ref(0);
 
 const form = reactive({
-  email: '',
-  code: '',
-  password: '',
-  password_repeat: '',
-})
+  email: "",
+  code: "",
+  password: "",
+  password_repeat: "",
+});
 
 const validatePassword = (rule, value, callback) => {
-  if (value === '') {
-    callback(new Error('请再次输入密码'))
+  if (value === "") {
+    callback(new Error("请再次输入密码"));
   } else if (value !== form.password) {
-    callback(new Error("两次输入的密码不一致"))
+    callback(new Error("两次输入的密码不一致"));
   } else {
-    callback()
+    callback();
   }
-}
+};
 
 const rules = {
   email: [
-    {required: true, message: '请输入邮件地址', trigger: 'blur'},
-    {type: 'email', message: '请输入合法的电子邮件地址', trigger: ['blur', 'change']}
+    { required: true, message: "请输入邮件地址", trigger: "blur" },
+    { type: "email", message: "请输入合法的电子邮件地址", trigger: ["blur", "change"] },
   ],
-  code: [
-    {required: true, message: '请输入获取的验证码', trigger: 'blur'},
-  ],
+  code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
   password: [
-    {required: true, message: '请输入密码', trigger: 'blur'},
-    {min: 6, max: 16, message: '密码的长度必须在6-16个字符之间', trigger: ['blur']}
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 16, message: "密码长度必须在6-16个字符之间", trigger: ["blur"] },
   ],
-  password_repeat: [
-    {validator: validatePassword, trigger: ['blur', 'change']},
-  ],
-}
+  password_repeat: [{ validator: validatePassword, trigger: ["blur", "change"] }],
+};
 
-const formRef = ref()
-const isEmailValid = ref(false)
-const coldTime = ref(0)
+const formRef = ref();
+const isEmailValid = ref(false);
+const coldTime = ref(0);
 
 const onValidate = (prop, isValid) => {
-  if (prop === 'email')
-    isEmailValid.value = isValid
-}
+  if (prop === "email") isEmailValid.value = isValid;
+};
 
-const validateEmail = () => {
-  coldTime.value = 60
-  get(`/api/auth/ask-code?email=${form.email}&type=reset`, () => {
-    ElMessage.success(`验证码已发送到邮箱: ${form.email}，请注意查收`)
-    const handle = setInterval(() => {
-      coldTime.value--
-      if (coldTime.value === 0) {
-        clearInterval(handle)
-      }
-    }, 1000)
-  }, (message) => {
-    ElMessage.warning(message)
-    coldTime.value = 0
-  })
-}
+const validateEmail = async () => {
+  if (!form.email) return;
 
-const confirmReset = () => {
-  formRef.value.validate((isValid) => {
-    if (isValid) {
-      post('/api/auth/reset-confirm', {
-        email: form.email,
-        code: form.code
-      }, () => active.value++)
-    }
-  })
-}
+  coldTime.value = 60;
 
-const doReset = () => {
-  formRef.value.validate((isValid) => {
-    if (isValid) {
-      post('/api/auth/reset-password', {
-        email: form.email,
-        code: form.code,
-        password: form.password
-      }, () => {
-        ElMessage.success('密码重置成功，请重新登录')
-        router.push('/')
-      })
-    }
-  })
-}
+  try {
+    await auth.askCode({ email: form.email, type: "reset" });
 
+    const timer = setInterval(() => {
+      coldTime.value--;
+      if (coldTime.value === 0) clearInterval(timer);
+    }, 1000);
+  } catch (err) {
+    coldTime.value = 0;
+  }
+};
+
+const confirmReset = async () => {
+  const valid = await formRef.value.validate();
+  if (!valid) return;
+
+  try {
+    await auth.resetConfirm({ email: form.email, code: form.code });
+    active.value++;
+  } catch (err) {}
+};
+
+const doReset = async () => {
+  const valid = await formRef.value.validate();
+  if (!valid) return;
+
+  try {
+    await auth.resetPassword({
+      email: form.email,
+      code: form.code,
+      password: form.password,
+    });
+
+    router.push("/");
+  } catch (err) {}
+};
 </script>
 
 <style scoped>

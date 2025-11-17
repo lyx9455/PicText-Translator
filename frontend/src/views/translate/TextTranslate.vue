@@ -4,31 +4,50 @@
       <h2>文本翻译</h2>
 
       <div class="translate-wrapper">
-        <!-- 左侧源语言 -->
+
+        <!-- 左侧：源文本 -->
         <div class="translate-col">
-          <div class="col-header">{{ sourceLangLabel }}</div>
+
+          <el-select v-model="sourceLanguage" placeholder="选择源语言" class="lang-select">
+            <el-option label="中文" value="zh" />
+            <el-option label="英文" value="en" />
+            <el-option label="日语" value="ja" />
+            <el-option label="韩语" value="ko" />
+          </el-select>
+
           <el-input
               type="textarea"
               v-model="sourceText"
-              placeholder="请输入文本"
+              placeholder="请输入需要翻译的文本"
               rows="10"
           ></el-input>
         </div>
 
-        <!-- 中间切换按钮 -->
+        <!-- 切换按钮 -->
         <div class="translate-switch">
-          <el-button icon="ArrowRight" circle @click="switchLanguage"></el-button>
+          <el-button circle @click="switchLanguage">
+            <el-icon><Switch /></el-icon>
+          </el-button>
         </div>
 
-        <!-- 右侧目标语言 -->
+        <!-- 右侧：翻译结果 -->
         <div class="translate-col">
-          <div class="col-header">{{ targetLangLabel }}</div>
+
+          <el-select v-model="targetLanguage" placeholder="选择目标语言" class="lang-select">
+            <el-option label="英文" value="en" />
+            <el-option label="中文" value="zh" />
+            <el-option label="日语" value="ja" />
+            <el-option label="韩语" value="ko" />
+          </el-select>
+
           <el-input
               type="textarea"
               :value="translatedText"
               rows="10"
               readonly
           ></el-input>
+
+          <div v-if="loading" class="loading-text">正在翻译，请稍候...</div>
         </div>
       </div>
     </el-card>
@@ -36,39 +55,65 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { Switch } from '@element-plus/icons-vue'
+import { ref, watch } from 'vue'
+import { translate } from '@/net'
 
-// 数据
+// 输入与输出文本
 const sourceText = ref('')
 const translatedText = ref('')
-const isChineseToEnglish = ref(true)
 
-const sourceLangLabel = computed(() => (isChineseToEnglish.value ? '中文' : '英文'))
-const targetLangLabel = computed(() => (isChineseToEnglish.value ? '英文' : '中文'))
+// 语言
+const sourceLanguage = ref('zh')
+const targetLanguage = ref('en')
 
-// 切换方向
+// loading 状态
+const loading = ref(false)
+
+// 交换语言
 const switchLanguage = () => {
-  isChineseToEnglish.value = !isChineseToEnglish.value
-  const temp = sourceText.value
+  const tmpLang = sourceLanguage.value
+  sourceLanguage.value = targetLanguage.value
+  targetLanguage.value = tmpLang
+
+  const tmpText = sourceText.value
   sourceText.value = translatedText.value
-  translatedText.value = temp
+  translatedText.value = tmpText
 }
 
-// 模拟翻译防抖
+// 防抖
 let timer = null
-watch(sourceText, (newVal) => {
+watch(sourceText, () => {
   clearTimeout(timer)
+
+  if (!sourceText.value.trim()) {
+    translatedText.value = ''
+    return
+  }
+
   timer = setTimeout(() => {
-    if (!newVal.trim()) {
-      translatedText.value = ''
-      return
-    }
-    // 模拟翻译
-    translatedText.value = isChineseToEnglish.value
-        ? `[EN] ${newVal}`
-        : `[ZH] ${newVal}`
-  }, 500) // 500ms 防抖
+    translateText()
+  }, 400)
 })
+
+// 调用后端翻译
+const translateText = async () => {
+  loading.value = true
+  try {
+    const res = await translate.text({
+      text: sourceText.value,
+      sourceLanguage: sourceLanguage.value,
+      targetLanguage: targetLanguage.value,
+      formatType: 'text',
+      scene: 'general'
+    })
+    translatedText.value = res.translatedText
+  } catch (e) {
+    // 错误已被拦截器提示，这里不用处理
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -98,14 +143,19 @@ watch(sourceText, (newVal) => {
   flex-direction: column;
 }
 
-.col-header {
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
 .translate-switch {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.lang-select {
+  margin-bottom: 10px;
+}
+
+.loading-text {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #888;
 }
 </style>

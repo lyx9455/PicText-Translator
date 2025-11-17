@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.entity.RestBean;
+import com.example.common.RestBean;
 import com.example.entity.vo.ConfirmResetVO;
 import com.example.entity.vo.EmailRegisterVO;
 import com.example.entity.vo.EmailResetVO;

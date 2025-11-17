@@ -98,7 +98,18 @@
             <artifactId>commons-codec</artifactId>
             <version>1.15</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.aliyun/alimt20181012 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alimt20181012</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.aliyun/tea-openapi -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>tea-openapi</artifactId>
+            <version>0.3.10</version>
+        </dependency>
     </dependencies>
 
     <profiles>

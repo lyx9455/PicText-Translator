@@ -45,7 +45,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { getUsername, logout } from "@/net/index.js";
+import { auth, getUsername } from "@/net";
 import { useDark, useToggle } from "@vueuse/core";
 import router from "@/router/index.js";
 import { Edit, Picture, Menu } from "@element-plus/icons-vue";
@@ -69,11 +69,11 @@ function toggleDarkMode() {
   toggleDark();
 }
 
-function userLogout() {
-  logout(() => router.push("/"));
+async function userLogout() {
+  await auth.logout();
+  router.push("/");
 }
 </script>
-
 
 <style scoped>
 .index-container {
