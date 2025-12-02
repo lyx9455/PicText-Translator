@@ -117,8 +117,6 @@ public class SecurityConfig {
                 .build();
     }
 
-    /*==================  下方全是你原本的处理逻辑（我未改动）  ==================*/
-
     private void handleAuthenticationSuccess(HttpServletRequest request,
                                              HttpServletResponse response,
                                              Authentication authentication) throws IOException {
