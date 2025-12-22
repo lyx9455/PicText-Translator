@@ -139,9 +139,12 @@ public class SecurityConfig {
     private void handleAuthenticationFailure(HttpServletRequest request,
                                              HttpServletResponse response,
                                              AuthenticationException exception) throws IOException {
+
         response.setContentType("application/json;charset=utf-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
         PrintWriter writer = response.getWriter();
-        writer.write(RestBean.unauthorized(exception.getMessage()).asJsonString());
+        writer.write(RestBean.unauthorized("用户名或密码错误").asJsonString());
     }
 
     private void handleAccessDenied(HttpServletRequest request,

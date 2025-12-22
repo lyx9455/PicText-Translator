@@ -48,25 +48,41 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(
     res => {
         const data = res.data;
-        // 后端统一返回 { code, data, message }
+
+        // 成功
         if (data?.code === 200) {
             return data.data;
         }
+
+        // 401：区分 登录失败 vs 登录过期
         if (data?.code === 401) {
-            ElMessage.warning("登录状态已过期，请重新登录！");
-            deleteAccessToken(true);
+            const token = takeAccessToken();
+
+            if (token) {
+                // 已登录状态下的 401 → 登录过期
+                ElMessage.warning("登录状态已过期，请重新登录！");
+                deleteAccessToken(true);
+            } else {
+                // 未登录状态下的 401 → 登录失败
+                ElMessage.error(data?.message || "用户名或密码错误");
+            }
+
             return Promise.reject(new Error("UNAUTHORIZED"));
         }
+
+        // 其他业务错误
         ElMessage.warning(data?.message || "请求失败");
         return Promise.reject(new Error(data?.message || "REQUEST_ERROR"));
     },
     err => {
         const status = err.response?.status;
+
         if (status === 429) {
-            ElMessage.error(err.response.data?.message || "请求过于频繁");
+            ElMessage.error(err.response?.data?.message || "请求过于频繁");
         } else {
-            ElMessage.error("发生了一些错误，请联系管理员");
+            ElMessage.error(err.response?.data?.message || "发生了一些错误");
         }
+
         return Promise.reject(err);
     }
 );

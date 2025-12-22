@@ -7,7 +7,7 @@
     <div style="margin-top: 50px">
       <el-form :model="form" :rules="rules" ref="formRef">
         <el-form-item prop="username">
-          <el-input v-model="form.username" maxlength="10" type="text" placeholder="用户名/邮箱">
+          <el-input v-model="form.username" maxlength="32" type="text" placeholder="用户名/邮箱">
             <template #prefix>
               <el-icon>
                 <User/>
@@ -16,7 +16,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" maxlength="20" style="margin-top: 10px" placeholder="密码">
+          <el-input v-model="form.password" type="password" :show-password="true" maxlength="20" style="margin-top: 10px" placeholder="密码">
             <template #prefix>
               <el-icon>
                 <Lock/>
